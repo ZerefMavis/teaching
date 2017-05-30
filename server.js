@@ -27,5 +27,10 @@ app.use(session({
 	cookie: { secure: false }
 }));
 
+//Router
+app.get('/admin', (request, response) => {
+	response.render('./admin/index');
+});
+
 //Port
 app.listen(5000);
