@@ -15,7 +15,7 @@ let db = {
 };
 
 /**
-* open the connection to the database
+* Open the connection to the database
 */
 function openDb() {
 	mySqlClient = mysql.createConnection(db);
@@ -25,7 +25,7 @@ function openDb() {
 }
 
 /**
-* close the connection to the database
+* Close the connection to the database
 */
 function closeDb() {
 	mySqlClient.end((err) => {
