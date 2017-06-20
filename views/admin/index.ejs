@@ -33,5 +33,14 @@
 		</div>
 	</div>
 	<% include ./footer %>
+
+	<!-- Displays a modal if the connection return false -->
+	<% if(locals.code && locals.code === "0") { %>
+		<% include ../modals/connectionError %>
+		<script type="text/javascript">
+			$('#connectionError').modal('show'); 
+		</script>
+	<% } %>
+	<!-- End -->
 </body>
 </html>

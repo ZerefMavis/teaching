@@ -11,7 +11,7 @@ let db = {
 	host : "localhost",
 	user : "root",
 	password : "",
-	database : "dbteaching"
+	database : "db_teaching"
 };
 
 /**

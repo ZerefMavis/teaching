@@ -10,8 +10,13 @@
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
+let htmlspecialchars = require('htmlspecialchars');
 let sha1 = require('sha1');
 let session = require('express-session');
+
+//Personal modules
+let db = require('./modules/db');
+let login = require('./modules/login');
 
 //Set the template
 app.set('view engine', 'ejs');
@@ -28,8 +33,31 @@ app.use(session({
 }));
 
 //Router
-app.get('/admin', (request, response) => {
-	response.render('./admin/index');
+app.route('/admin')
+	.get((request, response) => {
+		if(request.query.code && request.query.code === "0") {
+			response.render('./admin/index', { code : "0" });
+		} else {
+			response.render('./admin/index');
+		}
+	})	
+	.post((request, response) => {
+		let username = htmlspecialchars(request.body.username);
+		let password = htmlspecialchars(sha1(request.body.password));
+		let key = [username, password];
+
+		login.connection(key, db, "admin", (connection, username) => {
+			if(connection) {
+				request.session.username = username;
+				response.redirect('/admin/home');
+			} else {
+				response.redirect('/admin?code=0');
+			}
+		});
+	});
+
+app.get('/admin/home', (request, response) => {
+	response.render('./admin/home', { path : "home" });
 });
 
 //Port
