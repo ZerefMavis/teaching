@@ -12,12 +12,31 @@
 
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
   			<ul class="nav navbar-nav navbar-left">
-  				<li><a href="/admin/home">Accueil <span class="sr-only">(current)</span></a></li>
-    			<li><a href="/admin/lesson">Nouvelle leçon</a></li>
-    			<li><a href="/admin/exercice">Nouvel exercice</a></li>
-    			<li><a href="/admin/edit">Editer</a></li>
+          <% if(locals.path && locals.path === "home") { %>
+  				  <li class="active"><a href="/admin/home">Accueil <span class="sr-only">(current)</span></a></li>
+          <% } else { %>
+            <li><a href="/admin/home">Accueil <span class="sr-only">(current)</span></a></li>
+          <% } %>
+
+          <% if(locals.path && locals.path === "lesson") { %>
+            <li class="active"><a href="/admin/lesson">Nouvelle leçon</a></li>
+          <% } else { %>
+            <li><a href="/admin/lesson">Nouvelle leçon</a></li>
+          <% } %>
+
+          <% if(locals.path && locals.path === "exercice") { %>
+            <li class="active"><a href="/admin/exercice">Nouvel exercice</a></li>
+          <% } else { %>
+            <li><a href="/admin/exercice">Nouvel exercice</a></li>
+          <% } %>
+
+          <% if(locals.path && locals.path === "edit") { %>
+            <li class="active"><a href="/admin/edit">Editer</a></li>
+          <% } else { %>
+            <li><a href="/admin/edit">Editer</a></li>
+          <% } %>
   			</ul>
-      		<a href="/logoutAdmin"><button type="button" class="btn btn-danger navbar-btn navbar-right" style="margin-right: 10px;">Déconnexion</button></a>
+      	<a href="/logoutAdmin"><button type="button" class="btn btn-danger navbar-btn navbar-right" style="margin-right: 10px;">Déconnexion</button></a>
 		</div>
 	</div>
 </nav>

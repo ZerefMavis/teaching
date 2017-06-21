@@ -32,6 +32,32 @@ app.use(session({
 	cookie: { secure: false }
 }));
 
+/****************************************************/
+app.use((request, response, next) => {
+	login.isLogged(request, session, db, (log) => {
+		if(log && request.path === "/admin" && (request.method === "GET" || request.method === "POST")) {
+			response.redirect('/admin/home');
+		} else {
+			next();
+		}
+	});
+});
+
+app.use((request, response, next) => {
+	login.isLogged(request, session, db, (log) => {
+		if(!log && request.path !== "/admin" && request.path !== "/") {
+			if(request.path.substr(0,6) === "/admin") {
+				response.redirect('/admin');
+			} else {
+				response.redirect('/');
+			}
+		} else {
+			next();
+		}
+	});
+});
+/****************************************************/
+
 //Router
 app.route('/admin')
 	.get((request, response) => {
@@ -46,9 +72,10 @@ app.route('/admin')
 		let password = htmlspecialchars(sha1(request.body.password));
 		let key = [username, password];
 
-		login.connection(key, db, "admin", (connection, username) => {
+		login.connection(key, db, "admin", (connection, username, role) => {
 			if(connection) {
 				request.session.username = username;
+				request.session.role = role;
 				response.redirect('/admin/home');
 			} else {
 				response.redirect('/admin?code=0');
