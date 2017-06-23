@@ -34,9 +34,36 @@ app.use(session({
 
 /****************************************************/
 app.use((request, response, next) => {
-	login.isLogged(request, session, db, (log) => {
-		if(log && request.path === "/admin" && (request.method === "GET" || request.method === "POST")) {
+	console.log("utilisation");
+	login.isLogged(request, session, "admin", db, (log) => {
+		if(log && request.path === "/admin") {
 			response.redirect('/admin/home');
+			next();
+		} else if(!log && request.path !== "/admin") {
+			response.redirect('/admin');
+			next();
+		}
+	});
+});
+
+app.use((request, response, next) => {
+	console.log("utilisation");
+	login.isLogged(request, session, "user", db, (log) => {
+		if(log && request.path === "/") {
+			response.redirect('/home');
+			next();
+		} else if(!log && request.path !== "/") {
+			response.redirect('/');
+			next();
+		}
+	});
+});
+
+/*
+app.use((request, response, next) => {
+	login.isLogged(request, session, "admin", db, (log) => {
+		if(!log && request.path !== "/admin") {
+			response.redirect('/admin');
 		} else {
 			next();
 		}
@@ -44,18 +71,14 @@ app.use((request, response, next) => {
 });
 
 app.use((request, response, next) => {
-	login.isLogged(request, session, db, (log) => {
-		if(!log && request.path !== "/admin" && request.path !== "/") {
-			if(request.path.substr(0,6) === "/admin") {
-				response.redirect('/admin');
-			} else {
-				response.redirect('/');
-			}
+	login.isLogged(request, session, "user", db, (log) => {
+		if(!log && request.path !== "/") {
+			response.redirect('/');
 		} else {
 			next();
 		}
 	});
-});
+});*/
 /****************************************************/
 
 //Router
@@ -75,7 +98,6 @@ app.route('/admin')
 		login.connection(key, db, "admin", (connection, username, role) => {
 			if(connection) {
 				request.session.username = username;
-				request.session.role = role;
 				response.redirect('/admin/home');
 			} else {
 				response.redirect('/admin?code=0');
@@ -87,5 +109,14 @@ app.get('/admin/home', (request, response) => {
 	response.render('./admin/home', { path : "home" });
 });
 
+app.get('/', (request, response) => {
+	request.session.username = "user";
+	request.session.role = "user";
+	response.send("test");
+});
+
+app.get('/home', (request, response) => {
+	response.send("ok");
+});
 //Port
 app.listen(5000);
