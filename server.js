@@ -33,52 +33,7 @@ app.use(session({
 }));
 
 /****************************************************/
-app.use((request, response, next) => {
-	console.log("utilisation");
-	login.isLogged(request, session, "admin", db, (log) => {
-		if(log && request.path === "/admin") {
-			response.redirect('/admin/home');
-			next();
-		} else if(!log && request.path !== "/admin") {
-			response.redirect('/admin');
-			next();
-		}
-	});
-});
-
-app.use((request, response, next) => {
-	console.log("utilisation");
-	login.isLogged(request, session, "user", db, (log) => {
-		if(log && request.path === "/") {
-			response.redirect('/home');
-			next();
-		} else if(!log && request.path !== "/") {
-			response.redirect('/');
-			next();
-		}
-	});
-});
-
-/*
-app.use((request, response, next) => {
-	login.isLogged(request, session, "admin", db, (log) => {
-		if(!log && request.path !== "/admin") {
-			response.redirect('/admin');
-		} else {
-			next();
-		}
-	});
-});
-
-app.use((request, response, next) => {
-	login.isLogged(request, session, "user", db, (log) => {
-		if(!log && request.path !== "/") {
-			response.redirect('/');
-		} else {
-			next();
-		}
-	});
-});*/
+//request.path && request.method
 /****************************************************/
 
 //Router
